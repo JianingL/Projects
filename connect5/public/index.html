@@ -8,6 +8,9 @@
 
     <script src="assets/angular.js"></script>
     <script src="assets/bower_components/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="assets/bower_components/angular-socket-io/socket.js"></script>
+    <script src="app.module.js"></script>
+    <script src="SocketFactory.js"></script>
     <script src="connect5.js"></script>
 </head>
 <body ng-app="connect5" ng-controller="GameController">
@@ -67,10 +70,20 @@
             </tbody>
         </table>
     </div>
-
-
 </div>
 
+    <div>
+        <ul>
+            <li ng-repeat="msg in messages">{{msg}}</li>
+        </ul>
+        <form ng-submit="submit()">
+            <input type = "text" ng-model="text" name = "text"/>
+            <input type = "submit" id = "submit" value = "Submit" />
+        </form>
+
+    </div>
 </div>
+
+
 </body>
 </html>

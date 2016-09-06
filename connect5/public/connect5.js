@@ -1,10 +1,11 @@
 /**
  * Created by Jianing on 15-7-22.
  */
-var app = angular.module('connect5', []);
+var app = angular.module('connect5');
 app.controller('GameController', GameController);
+GameController.$inject = ['$scope', 'SocketFactory'];
 
-function GameController($scope){
+function GameController($scope, socket){
     var boardw = 15;
     var boardh = 15;
     var chessRecord = [];
@@ -117,6 +118,13 @@ function GameController($scope){
         }
     }
 
-
+    $scope.messages = [];
+    socket.on('chat message', function(msg){
+        $scope.messages.push(msg);
+    });
+    $scope.submit = function(){
+        socket.emit('chat message', $scope.text);
+        $scope.text = '';
+    };
     init();
 }
