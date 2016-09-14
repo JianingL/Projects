@@ -8,8 +8,8 @@ GameController.$inject = ['$scope', 'SocketFactory'];
 function GameController($scope, socket){
 
     $scope.players = {
-        'x': '胖对象',
-        'o': '胖胖脸'
+        'x': 'Esther',
+        'o': 'Brian'
     };
     $scope.photo = {
         'x': 'assets/x.jpeg',
@@ -53,4 +53,10 @@ function GameController($scope, socket){
             col: col
         })
     };
+    $scope.reset = function(){
+        socket.emit('reset');
+    };
+    $scope.undo = function(){
+        socket.emit('undo');
+    }
 }

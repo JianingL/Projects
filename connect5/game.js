@@ -8,6 +8,7 @@ var boardw = 15;
 var boardh = 15;
 var currentPlayer = 'x';
 var board;
+var chessRecord = [];
 
 function init() {
     board = new Array(boardw);
@@ -32,6 +33,7 @@ function play(row, col){
         } else {
             endTurn();
         }
+        chessRecord.push([row, col]);
     }
 
     emitGameState();
@@ -102,7 +104,20 @@ function getGameState(){
     };
 }
 
+function reset(){
+    init();
+    emitGameState();
+}
+
+function undo(){
+    board[chessRecord[chessRecord.length-1][0]][chessRecord[chessRecord.length-1][1]] = '';
+    chessRecord.pop();
+    endTurn();
+    emitGameState();
+}
 module.exports.getGameState = getGameState;
 module.exports.init = init;
 module.exports.on = eventEmitter.on.bind(eventEmitter);
 module.exports.play = play;
+module.exports.reset = reset;
+module.exports.undo = undo;

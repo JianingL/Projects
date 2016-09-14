@@ -42,6 +42,13 @@ io.on('connection', function(socket){
         // send the event to everyone
         io.emit('chat message', msg);
     });
+
+    socket.on('reset', function(){
+        game.reset();
+    });
+    socket.on('undo', function(){
+        game.undo();
+    });
 });
 
 http.listen(8080, function () {
