@@ -5,7 +5,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var game = require('./game');
+var Game = require('./game');
+var game = new Game();
 game.init();
 
 app.use(express.static('public'));
