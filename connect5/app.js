@@ -1,56 +1,78 @@
 var express = require('express');
 var app = express();
-
-
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
+var RoomManager = require('./RoomManager');
 var Game = require('./game');
-var game = new Game();
-game.init();
-
 app.use(express.static('public'));
 
 io.on('connection', function(socket){
-    console.log('a user connected');
+    socket.on('getRooms', function(data, callback){
+        callback(RoomManager.getRooms());
+    });
+    socket.on('createRoom', function(data){
+        RoomManager.createRoom(data.roomName, data.player);
+        joinGame(data);
 
-    socket.emit('gameState', game.getGameState());
+    });
+    socket.on('joinRoom', function(data){
+        RoomManager.joinRoom(data.roomName, data.player);
+        joinGame(data);
+    });
+    function joinGame(data){
+        socket.join(data.roomName);
 
-    game.on('invalidLocation', function(){
-        socket.emit('invalidLocation');
-    });
-    game.on('announceWinner', function(player){
-        socket.emit('announceWinner', player);
-    });
-    game.on('announceDraw', function(){
-        socket.emit('announceDraw');
-    });
-    game.on('gameState', function(gameState){
+        var room = RoomManager.getRoom(data.roomName);
+        var game = room.game;
+        socket.player = room.getRole(data.player);
+        console.log(socket.player);
+        socket.on('getGameState', function(data, callback) {
+            callback(game.getGameState());
+        });
 
-        socket.emit('gameState', gameState);
-    });
+        game.on('invalidLocation', function(){
+            socket.emit('invalidLocation');
+        });
+        game.on('announceWinner', function(player){
+            socket.emit('announceWinner', player);
+        });
+        game.on('announceDraw', function(){
+            socket.emit('announceDraw');
+        });
+        game.on('gameState', function(gameState){
 
-    socket.on('playLocation', function(location){
-        console.log(location);
-        game.play(location.row, location.col);
-    });
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
+            socket.emit('gameState', gameState);
+        });
 
-    socket.on('chat message', function(msg){
-        console.log('message:' + msg);
-        // send the event to everyone
-        io.emit('chat message', msg);
-    });
+        socket.on('disconnect', function(){
+            console.log('user disconnected');
+        });
 
-    socket.on('reset', function(){
-        game.reset();
-    });
-    socket.on('undo', function(){
-        game.undo();
-    });
+        socket.on('chat message', function(msg){
+            console.log('message:' + msg);
+            // send the event to everyone
+            io.emit('chat message', msg);
+        });
+
+        socket.on('playLocation', function(location){
+            console.log(location);
+            if (socket.player != game.currentPlayer) return;
+            game.play(location.row, location.col);
+        });
+
+
+        socket.on('reset', function(){
+            game.reset();
+        });
+        socket.on('undo', function(){
+            if (socket.player != game.currentPlayer) return;
+            game.undo();
+        });
+    }
+    socket.on('leaveRoom', RoomManager.leaveRoom);
 });
+
+
 
 http.listen(8080, function () {
     console.log('Example app listening on port 8080!');

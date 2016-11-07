@@ -8,18 +8,22 @@ GameController.$inject = ['$scope', 'SocketFactory'];
 function GameController($scope, socket){
 
     $scope.players = {
-        'x': 'Esther',
-        'o': 'Brian'
+        'x': 'Brian',
+        'o': 'Esther'
     };
     $scope.photo = {
         'x': 'assets/x.jpeg',
         'o': 'assets/o.JPG'
     };
 
-    socket.on('gameState', function(state) {
+    socket.emit('getGameState', '', function(state) {
         $scope.board = state.board;
         $scope.currentPlayer = state.currentPlayer;
     });
+    socket.on('gameState', function(state){
+        $scope.board = state.board;
+        $scope.currentPlayer = state.currentPlayer;
+    })
     socket.on('invalidLocation', function(){
         sweetAlert({
             title: "you cannot put it here",

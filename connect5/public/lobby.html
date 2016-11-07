@@ -1,0 +1,20 @@
+<div ng-controller="LobbyController">
+    <div>
+        Username: {{username}}
+        <form ng-submit="createRoom()">
+            <input type="text" ng-model="roomName" placeholder="Roomname" required="required" />
+            <button type="submit" class="btn btn-primary  btn-large">Create Room</button>
+            <button type="button" ng-click="getRooms()" class="btn btn-primary  btn-large">Get Rooms</button>
+        </form>
+    </div>
+    <hr>
+    <div class="row">
+        <div ng-repeat="room in rooms" class="col-sm-4 well">
+            <p>Room Name: {{room.roomName}}</p>
+            <p>
+                <button type="button" ng-click="joinRoom(room)" class="btn btn-primary  btn-large">Join Room</button>
+            </p>
+        </div>
+    </div>
+</div>
+
