@@ -3,23 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="assets/bootstrap-3.3.5-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="assets/bower_components/sweetalert/dist/sweetalert.css">
 
-    <script src="assets/angular.js"></script>
+    <script src="assets/bower_components/lodash/dist/lodash.js"></script>
+    <script src="assets/bower_components/bluebird/js/browser/bluebird.js"></script>
+    <script src="assets/bower_components/angular/angular.js"></script>
     <script src="assets/bower_components/sweetalert/dist/sweetalert.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="assets/bower_components/angular-socket-io/socket.js"></script>
     <script src="assets/bower_components/angular-route/angular-route.js"></script>
     <script src="app.module.js"></script>
-    <script src="user.service.js"></script>
-    <script src="SocketFactory.js"></script>
+    <script src="player.service.js"></script>
+    <script src="lobby.service.js"></script>
+    <script src="game.service.js"></script>
+    <script src="socket.service.js"></script>
     <script src="game.controller.js"></script>
     <script src="lobby.controller.js"></script>
-    <script src="login.controller.js"></script>
+    <script src="home.controller.js"></script>
+    <script src="nav.controller.js"></script>
 </head>
 <body ng-app="connect5" style="margin: 10px 50px;">
-    <div ng-view class="text-center">
+
+    <div ng-controller="NavController">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#!/">Home</a></li>
+            <li role="presentation" ng-if="playerService.player"><a href="#!/lobby">Lobby</a></li>
+            <li role="presentation" ng-if="playerService.player"><a href="#!/game">Game</a></li>
+
+            <li role="presentation" ng-if="playerService.player"><a ng-click="playerService.logout()">Logout</a></li>
+        </ul>
+    </div>
+
+    <div ng-view class="text-center container">
 
     </div>
 </body>

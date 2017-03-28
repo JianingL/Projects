@@ -1,0 +1,22 @@
+<div class="text-center">
+    <div ng-hide="playerService.player">
+        <h1>Login</h1>
+        <form ng-submit="login()">
+            <div class="form-group">
+                <input class="form-control" type="text" ng-model="playerName" placeholder="Player Name" required="required" />
+            </div>
+
+            <div class="form-group">
+                <label>Pick an avatar:</label>
+                <select class="form-control" ng-options="avatar for avatar in avatars" ng-model="selectedAvatar" required="required"></select>
+            </div>
+
+            <button type="submit" class="btn btn-primary  btn-large">Log in</button>
+        </form>
+    </div>
+    <div ng-show="playerService.player">
+        <h1>Hi, {{playerService.player.name}}</h1>
+        <h2>Go to the lobby to create or join a room!</h2>
+        <a href="#!/lobby"><button class="btn btn-primary">Go to Lobby</button></a>
+    </div>
+</div>
