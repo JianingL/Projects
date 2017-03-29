@@ -23,20 +23,22 @@
     <script src="home.controller.js"></script>
     <script src="nav.controller.js"></script>
 </head>
-<body ng-app="connect5" style="margin: 10px 50px;">
+<body ng-app="connect5">
 
-    <div ng-controller="NavController">
-        <ul class="nav nav-tabs">
-            <li role="presentation" class="active"><a href="#!/">Home</a></li>
-            <li role="presentation" ng-if="playerService.player"><a href="#!/lobby">Lobby</a></li>
-            <li role="presentation" ng-if="playerService.player"><a href="#!/game">Game</a></li>
+    <div class="container">
+        <div ng-controller="NavController">
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-class="{ active: isActive('/')}"><a href="#!/">Home</a></li>
+                <li role="presentation" ng-if="playerService.player" ng-class="{ active: isActive('/lobby')}"><a href="#!/lobby">Lobby</a></li>
+                <li role="presentation" ng-if="playerService.player" ng-class="{ active: isActive('/game')}"><a href="#!/game">Game</a></li>
+                <li role="presentation" ng-if="playerService.player"><a ng-click="playerService.logout()">Logout</a></li>
+            </ul>
+        </div>
 
-            <li role="presentation" ng-if="playerService.player"><a ng-click="playerService.logout()">Logout</a></li>
-        </ul>
+        <div ng-view class="text-center">
+
+        </div>
     </div>
 
-    <div ng-view class="text-center container">
-
-    </div>
 </body>
 </html>

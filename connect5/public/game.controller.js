@@ -10,7 +10,6 @@ function GameController($scope, GameService, player, $location){
         $location.path('/');
         return;
     }
-    console.log('game controller');
     $scope.game = GameService;
 
     GameService.getGameState();

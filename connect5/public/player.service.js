@@ -6,7 +6,7 @@
 var app = angular.module('connect5');
 
 app.service('PlayerService', PlayerService);
-PlayerService.$inject = ['$http'];
+PlayerService.$inject = ['$http', 'SocketService'];
 
 
 let urls = {
@@ -15,8 +15,9 @@ let urls = {
     getSession: '/session'
 };
 
-function PlayerService($http) {
+function PlayerService($http, SocketService) {
     this.player = undefined;
+    this.socket = SocketService.sharedSocket;
     this.login = function (playerName, avatar) {
         let payload = {
             playerName: playerName,
@@ -26,12 +27,20 @@ function PlayerService($http) {
             .then((res) => {
                 this.player = res.data;
             })
+            .then(() => {
+                this.socket.disconnect();
+                this.socket.connect();
+            })
             .catch(console.error);
     };
     this.logout = function() {
         return $http.post(urls.logout)
             .then(() => {
                 this.player = undefined;
+            })
+            .then(() => {
+                this.socket.disconnect();
+                this.socket.connect();
             })
             .catch(console.error);
     };

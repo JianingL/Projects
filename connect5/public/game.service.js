@@ -14,6 +14,10 @@ function GameService(SocketService) {
     this.players = [];
     this.currentPlayer = undefined;
 
+    this.isInProgress = function(){
+        return this.players.length === 2;
+    };
+
     this.getGameState = function(){
         console.log('ok');
         socket.emit('getGameState', '', this.updateGameState.bind(this));
@@ -44,19 +48,19 @@ function GameService(SocketService) {
     socket.on('invalidLocation', function(){
         sweetAlert({
             title: "you cannot put it here",
-            imageUrl: "assets/cannot.jpg"
+            imageUrl: "assets/imgs/cannot.jpg"
         });
     });
     socket.on('announceWinner', function(winner){
         sweetAlert({
             title: "The winner is " + winner.name,
-            imageUrl: "assets/win.jpg"
+            imageUrl: "assets/imgs/win.jpg"
         });
     });
     socket.on('announceDraw', function(){
         sweetAlert({
             title: "It is a draw",
-            imageUrl: "assets/draw.jpeg"
+            imageUrl: "assets/imgs/draw.jpeg"
         });
     });
 }

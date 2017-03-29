@@ -6,17 +6,12 @@
 var app = angular.module('connect5');
 
 app.controller('NavController', NavController);
-NavController.$inject = ['$scope', 'PlayerService'];
+NavController.$inject = ['$scope', 'PlayerService', '$location'];
 
-function NavController($scope, PlayerService){
+function NavController($scope, PlayerService, $location){
     $scope.playerService = PlayerService;
-    /*
-    let init = Promise.coroutine(function*(){
-        let user = yield UserService.getUser();
-        $scope.user = user;
-    });
-
-    init();
-    */
+    $scope.isActive = function (viewLocation) {
+        return viewLocation === $location.path();
+    };
 }
 

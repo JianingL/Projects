@@ -56,18 +56,22 @@ http.listen(8080, function () {
 
 // main api
 function socketApi(socket){
-    console.log('new connection');
-
     let player = socket.request.session.player;
 
-    let activeRoom = RoomManager.getActiveRoom(player);
-    if(activeRoom){
-        socket.join(activeRoom.name);
-        let activeGame = activeRoom.game;
-        if(activeGame){
-            addGameApi(activeGame);
+    console.log('new connection', player);
+
+    if(player){
+        let activeRoom = RoomManager.getActiveRoom(player);
+        if(activeRoom){
+            joinGameRoom(activeRoom.name);
         }
     }
+
+    socket.on('disconnect', function(){
+        console.log('disconnect');
+    });
+
+    // room api
     socket.on('getRooms', function(data, callback){
         console.log('getRooms');
         console.log(RoomManager.getRooms());
@@ -80,7 +84,7 @@ function socketApi(socket){
 
         RoomManager.createRoom(roomName, player);
         updateRoomInfo();
-        socket.join(roomName);
+        joinGameRoom(roomName);
 
     });
     socket.on('joinRoom', function(room){
@@ -89,7 +93,7 @@ function socketApi(socket){
         let roomName = room.name;
         RoomManager.joinRoom(roomName, player);
         updateRoomInfo();
-        socket.join(roomName);
+        joinGameRoom(roomName);
 
         let _room = RoomManager.getRoom(roomName);
         if(_room.players.length === 2){
@@ -103,11 +107,28 @@ function socketApi(socket){
         let roomName = room.name;
         RoomManager.leaveRoom(roomName, player);
         updateRoomInfo();
-        socket.leave(roomName);
+        leaveGameRoom(roomName);
     });
 
-    socket.on('disconnect', function(){
-        console.log('disconnect');
+    // game api
+    socket.on('getGameState', function(data, callback) {
+        console.log('getGameState');
+        console.log(socket.gameRoom.game);
+        callback(socket.gameRoom.game);
+    });
+    socket.on('playLocation', function(location){
+        let game = socket.gameRoom.game;
+        if (!game.isPlayersTurn(player)) return;
+        game.play(location.row, location.col);
+    });
+
+    socket.on('reset', function(){
+        socket.gameRoom.game.reset();
+    });
+    socket.on('undo', function(){
+        let game = socket.gameRoom.game;
+        if (!game.isPlayersTurn(player)) return;
+        game.undo();
     });
 
     function updateRoomInfo(){
@@ -121,8 +142,6 @@ function socketApi(socket){
     }
 
     function addGameCallbacks(room, game){
-        console.log('addGameCallbacks');
-
         game.on('invalidLocation', function(){
             io.in(room.name).emit('invalidLocation');
         });
@@ -138,27 +157,15 @@ function socketApi(socket){
 
     }
 
-    function addGameApi(game){
-        console.log('addGameApi');
+    function joinGameRoom(roomName){
+        socket.join(roomName);
+        let room = RoomManager.getRoom(roomName);
+        socket.gameRoom = room;
+    }
 
-        socket.on('getGameState', function(data, callback) {
-            console.log('getGameState');
-            console.log(game);
-            callback(game);
-        });
-        socket.on('playLocation', function(location){
-            console.log(location);
-            if (!game.isPlayersTurn(player)) return;
-            game.play(location.row, location.col);
-        });
-
-        socket.on('reset', function(){
-            game.reset();
-        });
-        socket.on('undo', function(){
-            if (!game.isPlayersTurn(player)) return;
-            game.undo();
-        });
+    function leaveGameRoom(roomName){
+        socket.leave(roomName);
+        socket.gameRoom = undefined;
     }
 }
 

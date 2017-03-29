@@ -6,13 +6,12 @@ LobbyService.$inject = ['SocketService', 'PlayerService', '$rootScope'];
 
 function LobbyService(SocketService, PlayerService, $rootScope) {
     let socket = SocketService.sharedSocket;
-    let player = PlayerService.player;
 
     this.rooms = [];
     this.activeRoom = undefined;
 
     this.createRoom = function(roomName, cb){
-        let room = new Room(roomName, [player]);
+        let room = new Room(roomName, [PlayerService.player]);
         socket.emit('createRoom', room, cb);
     };
 
@@ -56,7 +55,7 @@ function LobbyService(SocketService, PlayerService, $rootScope) {
         isPlayerInRoom(){
             console.log(this.players);
             return this.players.some(function(_player){
-                return _player.name === player.name;
+                return _player.name === PlayerService.player.name;
             });
         }
     }

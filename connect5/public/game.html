@@ -1,5 +1,11 @@
-<div>
-    <div class="jumbotron text-center">
+<div ng-hide="game.isInProgress()">
+    <h2>You are not in any game</h2>
+    <h5>Go to the lobby to create or join a room!</h5>
+    <h5>When you have 2 players in a room your game will start!</h5>
+    <a href="#!/lobby"><button class="btn btn-primary">Go to Lobby</button></a>
+</div>
+<div ng-show="game.isInProgress()">
+    <div>
         <h2>Connect 5</h2>
         <p>
             x={{game.players[0].name}}<img ng-src="assets/avatars/{{game.players[0].avatar}}.png" width="100" height="100" class="img-circle">
@@ -7,7 +13,6 @@
         </p>
     </div>
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-md-4 text-center">
                 <div style="margin-top: 10%;">
@@ -59,5 +64,4 @@
 
 
     </div>
-
 </div>
