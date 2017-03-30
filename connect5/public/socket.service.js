@@ -1,8 +1,8 @@
 /**
  * Created by JianingLiu on 9/5/16.
  */
+'use strict';
 
-var app = angular.module('connect5');
 app.service('SocketService', SocketService);
 
 SocketService.$inject = ['socketFactory'];

@@ -4,7 +4,7 @@
 
 'use strict';
 
-var app = angular.module('connect5', [
+let app = angular.module('connect5', [
     'btford.socket-io',
     'ngRoute',
 ]);

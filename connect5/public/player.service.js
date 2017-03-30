@@ -3,11 +3,9 @@
  */
 
 'use strict';
-var app = angular.module('connect5');
 
 app.service('PlayerService', PlayerService);
 PlayerService.$inject = ['$http', 'SocketService'];
-
 
 let urls = {
     login: '/login',

@@ -1,7 +1,9 @@
 /**
  * Created by Jianing on 15-7-22.
  */
-var app = angular.module('connect5');
+
+'use strict';
+
 app.controller('GameController', GameController);
 GameController.$inject = ['$scope', 'GameService', 'player', '$location'];
 

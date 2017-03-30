@@ -4,7 +4,6 @@
 
 'use strict';
 
-var app = angular.module('connect5');
 app.controller('LobbyController', LobbyController);
 LobbyController.$inject = ['$scope', 'player', 'LobbyService', '$location', '$rootScope'];
 

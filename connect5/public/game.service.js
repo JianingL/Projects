@@ -3,7 +3,6 @@
  */
 
 'use strict';
-var app = angular.module('connect5');
 
 app.service('GameService', GameService);
 GameService.$inject = ['SocketService', 'PlayerService'];

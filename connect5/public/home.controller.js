@@ -1,7 +1,8 @@
 /**
  * Created by JianingLiu on 11/6/16.
  */
-var app = angular.module('connect5');
+'use strict';
+
 app.controller('HomeController', HomeController);
 HomeController.$inject = ['$scope', 'player', 'PlayerService', 'G_AVATARS', '$location'];
 

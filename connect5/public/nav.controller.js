@@ -3,7 +3,6 @@
  */
 
 'use strict';
-var app = angular.module('connect5');
 
 app.controller('NavController', NavController);
 NavController.$inject = ['$scope', 'PlayerService', '$location'];

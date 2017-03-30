@@ -1,5 +1,4 @@
 'use strict';
-var app = angular.module('connect5');
 
 app.service('LobbyService', LobbyService);
 LobbyService.$inject = ['SocketService', 'PlayerService', '$rootScope'];
