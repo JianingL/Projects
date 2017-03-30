@@ -13,29 +13,34 @@
     </div>
     <div ng-show="lobby.activeRoom">
         <h2>Active Room:</h2>
-        <div class="panel panel-default well">
-            <p>Name: {{lobby.activeRoom.name}}</p>
-            <p>Created by: {{lobby.activeRoom.players[0].name}}</p>
-            <p>Players: {{lobby.activeRoom.players.length}}/2</p>
-            <p>
-                <button type="button" ng-click="leaveRoom(lobby.activeRoom)" class="btn btn-primary">Leave Room</button>
-            </p>
+        <div class="panel panel-default panel-success">
+            <div class="panel-heading"><b>{{lobby.activeRoom.name}}</b></div>
+            <div class="panel-body">
+                <p>Owner: {{lobby.activeRoom.players[0].name}}</p>
+                <p>Players: {{lobby.activeRoom.players.length}}/2</p>
+                <p>
+                    <button type="button" ng-click="leaveRoom(lobby.activeRoom)" class="btn btn-primary">Leave Room</button>
+                </p>
+            </div>
+
         </div>
     </div>
 </div>
 
 <hr>
 <div>
-    <div ng-repeat="room in lobby.rooms" class="panel panel-default col-sm-4 well">
-        <div class="panel-body">
-            <p>Name: {{room.name}}</p>
-            <p>Created by: {{room.players[0].name}}</p>
-            <p>Players: {{room.players.length}}/2</p>
-            <p ng-if="room.players.length < 2 && lobby.activeRoom === undefined">
-                <button type="button" ng-click="joinRoom(room)" class="btn btn-primary">Join Room</button>
-            </p>
+    <div ng-repeat="room in lobby.rooms" class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>{{room.name}}</b></div>
+            <div class="panel-body">
+                <p>Owner: {{room.players[0].name}}</p>
+                <p>Players: {{room.players.length}}/2</p>
+                <p ng-if="room.players.length < 2 && lobby.activeRoom === undefined">
+                    <button type="button" ng-click="joinRoom(room)" class="btn btn-primary">Join Room</button>
+                </p>
+            </div>
         </div>
-
     </div>
+
 </div>
 

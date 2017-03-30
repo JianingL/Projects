@@ -13,5 +13,9 @@ function NavController($scope, PlayerService, $location){
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
+    $scope.logout = function(){
+        PlayerService.logout();
+        $location.path('/');
+    };
 }
 

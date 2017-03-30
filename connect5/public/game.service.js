@@ -10,21 +10,24 @@ GameService.$inject = ['SocketService', 'PlayerService'];
 
 function GameService(SocketService, PlayerService) {
     let socket = SocketService.sharedSocket;
-    this.board = undefined;
-    this.players = [];
-    this.currentPlayer = undefined;
+
+    this.init = function(){
+        this.board = undefined;
+        this.players = [];
+        this.currentPlayer = undefined;
+        this.matchHistory = undefined;
+    };
 
     this.isInProgress = function(){
         return this.players.length === 2;
     };
 
     this.getGameState = function(){
-        console.log('ok');
         socket.emit('getGameState', '', this.updateGameState.bind(this));
     };
 
     this.updateGameState = function(game){
-        console.log(game);
+        if(!game) return;
         this.board = game.board.board;
         this.players = game.players;
         this.currentPlayer = game.currentPlayer;
@@ -75,4 +78,9 @@ function GameService(SocketService, PlayerService) {
             imageUrl: "assets/imgs/draw.jpeg"
         });
     });
+    socket.on('endGame', () => {
+        this.init();
+    });
+
+    this.init();
 }

@@ -32,7 +32,7 @@
                 <li role="presentation" ng-class="{ active: isActive('/')}"><a href="#!/">Home</a></li>
                 <li role="presentation" ng-if="playerService.player" ng-class="{ active: isActive('/lobby')}"><a href="#!/lobby">Lobby</a></li>
                 <li role="presentation" ng-if="playerService.player" ng-class="{ active: isActive('/game')}"><a href="#!/game">Game</a></li>
-                <li role="presentation" ng-if="playerService.player"><a ng-click="playerService.logout()">Logout</a></li>
+                <li role="presentation" ng-if="playerService.player"><a ng-click="logout()">Logout</a></li>
             </ul>
         </div>
 

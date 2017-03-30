@@ -3,10 +3,9 @@
  */
 var app = angular.module('connect5');
 app.controller('HomeController', HomeController);
-HomeController.$inject = ['$scope', 'player', 'PlayerService', 'G_AVATARS'];
+HomeController.$inject = ['$scope', 'player', 'PlayerService', 'G_AVATARS', '$location'];
 
-function HomeController($scope, player, PlayerService, G_AVATARS){
-    console.log('homecontroller', player);
+function HomeController($scope, player, PlayerService, G_AVATARS, $location){
     $scope.playerService = PlayerService;
     $scope.avatars = G_AVATARS;
     $scope.playerName = '';
@@ -15,7 +14,7 @@ function HomeController($scope, player, PlayerService, G_AVATARS){
     $scope.login = function (){
         PlayerService.login($scope.playerName, $scope.selectedAvatar)
             .then(function(){
-                //$location.path('/lobby');
+                $location.path('/lobby');
             });
     };
 }

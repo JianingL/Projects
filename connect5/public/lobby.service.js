@@ -28,11 +28,9 @@ function LobbyService(SocketService, PlayerService, $rootScope) {
     };
 
     this.updateRoomInfo = function(rooms){
-        console.log(rooms);
         this.rooms = rooms.map((room) => {
             return new Room(room.name, room.players);
         });
-        console.log('updateRoomInfo',this.rooms);
         this.setActiveRoom();
     };
 
@@ -53,7 +51,6 @@ function LobbyService(SocketService, PlayerService, $rootScope) {
             this.players = players;
         }
         isPlayerInRoom(){
-            console.log(this.players);
             return this.players.some(function(_player){
                 return _player.name === PlayerService.player.name;
             });

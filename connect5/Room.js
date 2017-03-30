@@ -30,6 +30,10 @@ class Room {
         return this.game;
     }
 
+    endGame(){
+        this.game = undefined;
+    }
+
     isPlayerInRoom(player){
         return this.players.some(function(_player){
             return _player.name === player.name;

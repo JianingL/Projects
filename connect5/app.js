@@ -82,29 +82,31 @@ function socketApi(socket){
         let roomName = room.name;
 
         RoomManager.createRoom(roomName, player);
-        updateRoomInfo();
         joinGameRoom(roomName);
+        updateRoomInfo();
 
     });
     socket.on('joinRoom', function(room){
         console.log('joinRoom', room);
         let roomName = room.name;
         RoomManager.joinRoom(roomName, player);
-        updateRoomInfo();
         joinGameRoom(roomName);
 
         let _room = RoomManager.getRoom(roomName);
         if(_room.players.length === 2){
             startGame(_room);
         }
+        updateRoomInfo();
     });
 
     socket.on('leaveRoom', function(room){
         console.log('leaveRoom', room);
         let roomName = room.name;
+        let _room = RoomManager.getRoom(roomName);
+        endGame(_room);
         RoomManager.leaveRoom(roomName, player);
-        updateRoomInfo();
         leaveGameRoom(roomName);
+        updateRoomInfo();
     });
 
     // game api
@@ -147,6 +149,13 @@ function socketApi(socket){
         let game = room.startGame();
         addGameCallbacks(room, game);
         io.in(room.name).emit('startGame');
+        io.in(room.name).emit('gameState', game);
+    }
+
+    function endGame(room){
+        room.endGame();
+        //TODO: remove callbacks? i think they are garbage collected
+        io.in(room.name).emit('endGame');
     }
 
     function addGameCallbacks(room, game){

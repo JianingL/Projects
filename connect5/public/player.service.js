@@ -40,7 +40,6 @@ function PlayerService($http, SocketService) {
             })
             .then(() => {
                 this.socket.disconnect();
-                this.socket.connect();
             })
             .catch(console.error);
     };
@@ -48,7 +47,6 @@ function PlayerService($http, SocketService) {
         if(this.player) return Promise.resolve(this.player);
         return $http.get(urls.getSession)
             .then((session) => {
-                console.log(session);
                 if(session.data){
                     this.player = session.data;
                 }else{
