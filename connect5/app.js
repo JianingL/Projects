@@ -58,8 +58,9 @@ http.listen(8080, function () {
 function socketApi(socket){
     let player = socket.request.session.player;
 
-    console.log('new connection', player);
+    console.log('connect:', player);
 
+    //resume session if player is already in a room
     if(player){
         let activeRoom = RoomManager.getActiveRoom(player);
         if(activeRoom){
@@ -68,18 +69,16 @@ function socketApi(socket){
     }
 
     socket.on('disconnect', function(){
-        console.log('disconnect');
+        console.log('disconnect:', player);
     });
 
     // room api
     socket.on('getRooms', function(data, callback){
-        console.log('getRooms');
-        console.log(RoomManager.getRooms());
+        console.log('getRooms', RoomManager.getRooms());
         callback(RoomManager.getRooms());
     });
     socket.on('createRoom', function(room){
-        console.log('createRoom');
-        console.log(room);
+        console.log('createRoom', room);
         let roomName = room.name;
 
         RoomManager.createRoom(roomName, player);
@@ -88,8 +87,7 @@ function socketApi(socket){
 
     });
     socket.on('joinRoom', function(room){
-        console.log('joinRoom');
-        console.log(room);
+        console.log('joinRoom', room);
         let roomName = room.name;
         RoomManager.joinRoom(roomName, player);
         updateRoomInfo();
@@ -102,8 +100,7 @@ function socketApi(socket){
     });
 
     socket.on('leaveRoom', function(room){
-        console.log('leaveRoom');
-        console.log(room);
+        console.log('leaveRoom', room);
         let roomName = room.name;
         RoomManager.leaveRoom(roomName, player);
         updateRoomInfo();
@@ -112,23 +109,34 @@ function socketApi(socket){
 
     // game api
     socket.on('getGameState', function(data, callback) {
-        console.log('getGameState');
-        console.log(socket.gameRoom.game);
+        if(!socket.gameRoom) return callback(undefined);
         callback(socket.gameRoom.game);
     });
     socket.on('playLocation', function(location){
+        if(!socket.gameRoom) return;
         let game = socket.gameRoom.game;
         if (!game.isPlayersTurn(player)) return;
         game.play(location.row, location.col);
     });
 
     socket.on('reset', function(){
-        socket.gameRoom.game.reset();
-    });
-    socket.on('undo', function(){
+        if(!socket.gameRoom) return;
         let game = socket.gameRoom.game;
-        if (!game.isPlayersTurn(player)) return;
+        game.reset();
+        game.emitGameState();
+    });
+
+    socket.on('undo', function(){
+        if(!socket.gameRoom) return;
+        let game = socket.gameRoom.game;
+        if (game.isPlayersTurn(player)) return;
         game.undo();
+    });
+
+    socket.on('clearHistory', function(){
+        if(!socket.gameRoom) return;
+        let game = socket.gameRoom.game;
+        game.clearHistory();
     });
 
     function updateRoomInfo(){

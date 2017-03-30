@@ -21,6 +21,7 @@
     "angular": "~1.6.3",
     "jquery": "~3.1.1",
     "bluebird": "~3.5.0",
-    "lodash": "~4.17.4"
+    "lodash": "~4.17.4",
+    "fontawesome": "~4.7.0"
   }
 }

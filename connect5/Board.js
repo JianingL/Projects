@@ -26,6 +26,10 @@ class Board{
         this.board[row][col] = piece;
     }
 
+    clear(row, col){
+        this.board[row][col] = '';
+    }
+
     hasFiveInARow(piece, row, col){
         let b = this.board;
         for (let i = col - 4; i < col + 1; i++) {

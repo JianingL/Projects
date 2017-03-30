@@ -12,9 +12,16 @@ const Board = require('./Board');
 class Game extends events.EventEmitter {
     constructor(players) {
         super();
-        this.board = new Board();
         this.players = players;
-        this.currentPlayer = players[0];
+        this.clearHistory();
+        this.reset();
+
+    }
+
+    reset(){
+        this.board = new Board();
+        this.currentPlayer = this.players[0];
+        this.moves = [];
     }
 
     play(row, col) {
@@ -32,11 +39,13 @@ class Game extends events.EventEmitter {
         } else {
             this.endTurn();
         }
+        this.moves.push([row, col]);
         this.emitGameState();
     }
 
     announceWinner() {
         this.emit('announceWinner', this.currentPlayer);
+        this.matchHistory[this.currentPlayer.name]++;
     };
 
     announceDraw() {
@@ -52,7 +61,6 @@ class Game extends events.EventEmitter {
     };
 
     emitGameState() {
-        console.log('emitGameState');
         this.emit('gameState', this);
     };
 
@@ -62,6 +70,22 @@ class Game extends events.EventEmitter {
 
     isPlayersTurn(player){
         return this.currentPlayer.name === player.name;
+    }
+
+    undo(){
+        let lastMove = this.moves.pop();
+        if(!lastMove) return;
+
+        this.board.clear(lastMove[0],lastMove[1]);
+        this.endTurn();
+        this.emitGameState();
+    }
+
+    clearHistory(){
+        this.matchHistory = {};
+        this.matchHistory[this.players[0].name] = 0;
+        this.matchHistory[this.players[1].name] = 0;
+        this.emitGameState();
     }
 
 }

@@ -6,9 +6,9 @@
 var app = angular.module('connect5');
 
 app.service('GameService', GameService);
-GameService.$inject = ['SocketService'];
+GameService.$inject = ['SocketService', 'PlayerService'];
 
-function GameService(SocketService) {
+function GameService(SocketService, PlayerService) {
     let socket = SocketService.sharedSocket;
     this.board = undefined;
     this.players = [];
@@ -28,6 +28,7 @@ function GameService(SocketService) {
         this.board = game.board.board;
         this.players = game.players;
         this.currentPlayer = game.currentPlayer;
+        this.matchHistory = game.matchHistory;
     };
 
     this.play = function(row, col){
@@ -43,9 +44,20 @@ function GameService(SocketService) {
         socket.emit('undo');
     };
 
+    this.clearHistory = function(){
+        socket.emit('clearHistory');
+    };
+
+    this.numberOfWins = function(player){
+        if(!this.matchHistory) return 0;
+
+        return this.matchHistory[player.name];
+    };
+
     socket.on('gameState', this.updateGameState.bind(this));
 
-    socket.on('invalidLocation', function(){
+    socket.on('invalidLocation', () => {
+        if(PlayerService.player.name !== this.currentPlayer.name) return;
         sweetAlert({
             title: "you cannot put it here",
             imageUrl: "assets/imgs/cannot.jpg"

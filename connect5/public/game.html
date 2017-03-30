@@ -5,63 +5,38 @@
     <a href="#!/lobby"><button class="btn btn-primary">Go to Lobby</button></a>
 </div>
 <div ng-show="game.isInProgress()">
-    <div>
-        <h2>Connect 5</h2>
-        <p>
-            x={{game.players[0].name}}<img ng-src="assets/avatars/{{game.players[0].avatar}}.png" width="100" height="100" class="img-circle">
-            o={{game.players[1].name}}<img ng-src="assets/avatars/{{game.players[1].avatar}}.png" width="100" height="100" class="img-circle">
-        </p>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <div style="margin-top: 10%;">
-                    <h4>Current player</h4>
-                    <img ng-src="assets/avatars/{{game.currentPlayer.avatar}}.png" width="100" height="100" class="img-circle">
+    <hr>
+    <div class="row">
+        <div ng-repeat="player in game.players" class="col-xs-6">
+            <div class="panel panel-default" ng-class="{'panel-success':game.currentPlayer.name === player.name}">
+                <div class="panel-heading"><b>{{player.name}}</b></div>
+                <div class="panel-body">
+                    <img ng-src="assets/avatars/{{player.avatar}}.png" width="100" height="100" class="img-circle">
                 </div>
-                <div>
-                    <button class="btn btn-primary btn-lg" ng-click="game.reset()">One more</button>
-                    <button class="btn btn-primary btn-lg" ng-click="game.undo()">Undo</button>
+                <div class="panel-footer">
+                    Wins: {{game.numberOfWins(player)}}
                 </div>
-                <div style="margin-top: 10%;">
-                    <table style="margin: 5% auto;">
-                        <tbody>
-                        <thead><h4>Record</h4></thead>
-                        <tr height="50">
-                            <td  width="200">
-                                <img ng-src="assets/avatars/{{game.players[0].avatar}}.png" width="50" height="50" class="img-circle">
-                            </td>
-                            <td width="200">
-                                <img ng-src="assets/avatars/{{game.players[1].avatar}}.png" width="50" height="50" class="img-circle">
-                            </td>
-                        </tr>
-                        <tr height="50">
-                            <td>
-                                {{recordx}}
-                            </td>
-                            <td>
-                                {{recordo}}
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <button class="btn btn-primary btn-lg" ng-click="resetRecord()">Reset Record</button>
-                </div>
-            </div>
-            <div class="col-md-8 text-center center-block">
-                <table border="1" class="text-center" style="margin: 5% auto;">
-                    <tbody>
-                    <tr ng-repeat="row in game.board track by $index">
-                        <td ng-repeat="cell in row track by $index" ng-click="game.play($parent.$index, $index)"
-                            width="35" height="35"  style="text-align: center" class="lead" >
-                            {{game.board[$parent.$index][$index]}}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
-
-
+    </div>
+    <div class="row">
+        <button title="New game" class="btn btn-primary" ng-click="game.reset()"><i class="fa fa-plus-circle"></i></button>
+        <button title="Undo" class="btn btn-primary" ng-click="game.undo()"><i class="fa fa-undo"></i></button>
+        <button title="Clear match history" class="btn btn-primary" ng-click="game.clearHistory()"><i class="fa fa-eraser"></i></button>
+    </div>
+    <hr>
+    <div class="row">
+        <div>
+            <table border="1" style="margin:auto;">
+                <tbody>
+                <tr ng-repeat="row in game.board track by $index">
+                    <td ng-repeat="cell in row track by $index" ng-click="game.play($parent.$index, $index)"
+                        width="35" height="35" class="lead" >
+                        {{game.board[$parent.$index][$index]}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

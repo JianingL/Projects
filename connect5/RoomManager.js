@@ -7,7 +7,6 @@ const Room = require('./Room');
 
 let rooms = {};
 function getRooms(){
-    console.log(_.toArray(rooms));
     return _.toArray(rooms);
 }
 function createRoom(roomName, player){
